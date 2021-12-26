@@ -18,7 +18,6 @@ function App() {
   const onRegister = ({ name, email, password }) => {
     return Auth.register(name, email, password)
     .then((res) => {
-      console.log('123')
       if (!res || res.statusCode === 400) throw new Error('Что-то пошло не так')
       return res;
     })
