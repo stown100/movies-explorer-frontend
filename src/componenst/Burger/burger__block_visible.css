@@ -1,0 +1,8 @@
+@media (min-width: 320px) and (max-width: 769px) {
+    .burger__block_visible {
+        opacity: 1;
+        visibility: visible;
+        z-index: 2;
+        margin: 0 auto;
+    }
+}
