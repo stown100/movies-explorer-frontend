@@ -1,7 +1,0 @@
-.filter-checkbox__button_on {
-    background: #3DDC84;
-}
-
-.filter-checkbox__button_on::after {
-    left: 20px;
-}
