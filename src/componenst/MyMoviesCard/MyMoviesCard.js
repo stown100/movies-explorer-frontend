@@ -1,9 +1,6 @@
 import React from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import removeCardIcon from '../../images/removeCardIcon.svg'
-import pic1 from '../../images/pic__COLOR_pic.png'
-import pic2 from '../../images/pic__COLOR_pic2.png'
-import pic3 from '../../images/pic__COLOR_pic3.png'
 
 const MyMoviesCard = (data) => {
     return (
