@@ -1,0 +1,6 @@
+.movie-card__elem_img-remove {
+    background-color: rgba(0, 0, 0, 0);
+    border: 0;
+    padding: 0;
+    cursor: pointer;
+}

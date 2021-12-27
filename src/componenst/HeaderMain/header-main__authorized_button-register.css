@@ -1,0 +1,11 @@
+.header-main__authorized_button-register {
+    margin-right: 30px;
+    text-decoration: none;
+    color: #FFFFFF;
+}
+
+@media (min-width: 320px) and (max-width: 450px) {
+    .header-main__authorized_button-register {
+        margin-right: 14px;
+    }
+}
