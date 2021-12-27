@@ -1,12 +1,19 @@
 import React from 'react';
 import Header from '../Header/Header';
 import MyCards from '../MyCards/MyCards';
-import MoviesCard from '../MoviesCard/MoviesCard';
 import Footer from '../Footer/Footer';
 import Preloader from '../Preloader/Preloader';
+import MyMoviesCard from '../MyMoviesCard/MyMoviesCard';
 
 const SavedMovies = () => {
     const [onButton, setOnButton] = React.useState(false);
+    const [card, setCard] = React.useState(MyCards);
+
+    //Удаление карточки
+    const removeCard = (id) => {
+        setCard([...card.filter(el => el._id !== id)]);
+    }
+
     return (
         <div className="saved-movies">
             <Header />
@@ -19,9 +26,9 @@ const SavedMovies = () => {
                 <p className="search__slider_text">Короткометражки</p>
             </div>
             <div className="movies-card">
-                {MyCards
-                    ? MyCards.map(( data ) =>
-                        <MoviesCard name={data.name} link={data.link} alt={data.alt} time={data.time} key={data._id} />)
+                {card
+                    ? card.map((data) =>
+                        <MyMoviesCard onClick={() => removeCard(data._id)} name={data.name} link={data.link} alt={data.alt} time={data.time} key={data._id} />)
                     : <Preloader />
                 }
             </div>

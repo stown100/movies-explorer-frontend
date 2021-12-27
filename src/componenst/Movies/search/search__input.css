@@ -11,6 +11,10 @@
     padding-bottom: 13px;
 }
 
+.search__input:hover {
+    opacity: 0.8;
+}
+
 @media (min-width: 320px) and (max-width: 700px) {
     .search__input {
         font-size: 18px;

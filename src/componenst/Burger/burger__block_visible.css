@@ -4,5 +4,6 @@
         visibility: visible;
         z-index: 2;
         margin: 0 auto;
+        overflow: scroll;
     }
 }

@@ -7,7 +7,7 @@ import Pointer from '../../images/pointer.svg';
 
 function Main() {
     return (
-        <div className="main">
+        <main className="main">
             <HeaderMain />
             <div className="promo">
                 <img className="promo__logo" src={Logo} alt="web-logo"></img>
@@ -99,7 +99,7 @@ function Main() {
                 </div>
             </div>
             <Footer />
-        </div>
+        </main>
 
     )
 }

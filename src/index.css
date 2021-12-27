@@ -110,6 +110,7 @@
 @import url('../src/componenst/MoviesCard/movies-card.css');
 @import url('../src/componenst/MoviesCard/movies-card__elem.css');
 @import url('../src/componenst/MoviesCard/movies-card__elem_img.css');
+@import url('../src/componenst/MoviesCard/movie-card__elem_img-remove.css');
 @import url('../src/componenst/MoviesCard/movies-card__elem_title.css');
 @import url('../src/componenst/MoviesCard/movies-card__elem_title-text.css');
 @import url('../src/componenst/MoviesCard/movies-card__elem_title-button.css');

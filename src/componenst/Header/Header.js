@@ -5,7 +5,7 @@ import Burger from '../Burger/Burger';
 function Header() {
     return (
         <Route>
-            <div className="header">
+            <header className="header">
                 <Link to="/" className="header__logo">
                     <img className="header__logo" src={logo} alt="logo"></img>
                 </Link>
@@ -15,7 +15,7 @@ function Header() {
                     <button className="header__account"><Link to="profile" className="header__link">Аккаунт</Link></button>
                 </div>
                 <Burger />
-            </div>
+            </header>
         </Route>
     )
 }
