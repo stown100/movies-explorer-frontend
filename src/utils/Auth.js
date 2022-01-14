@@ -1,5 +1,8 @@
-export const BASE_URL = 'http://localhost:3000';
-// https://myfilms.nomoredomains.rocks/api
+import { Route } from 'react-router-dom';
+import ErrorHandler from '../componenst/ErrorHandler/ErrorHandler';
+
+
+export const BASE_URL = 'https://myfilms.nomoredomains.rocks/api';
 
 const handleResponse = (res) => {
     if (res.ok) {
@@ -13,15 +16,22 @@ export const register = (name, email, password) => {
     return fetch(`${BASE_URL}/signup`, {
         method: 'POST',
         headers: {
+            'Accept': 'application/json',
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, email, password })
+        body: JSON.stringify({ name, email, password }),
     })
         .then(handleResponse)
-        .then((res) => {
+          .then((res) => {
             return res;
-        })
+          })
+        .catch((err) => {
+            <Route path="/error">
+              <ErrorHandler err={err} />
+            </Route>
+        });
 };
+
 
 export const login = (email, password) => {
     return fetch(`${BASE_URL}/signin`, {
@@ -46,6 +56,7 @@ export const getContent = (token) => {
     return fetch(`${BASE_URL}/users/me`, {
         method: 'GET',
         headers: {
+            'Accept': 'application/json',
             "Content-Type": "application/json",
             "Authorization": `Bearer ${token}`
         },
@@ -53,3 +64,33 @@ export const getContent = (token) => {
         .then(handleResponse)
         .then(data => data)
 }
+
+
+// duckAuth.js
+
+// export const BASE_URL = 'https://api.nomoreparties.co';
+
+// export const register = (username, password, email) => {
+//     debugger 
+//   return fetch(`${BASE_URL}/auth/local/register`, {
+//     method: 'POST',
+//     headers: {
+//       'Accept': 'application/json',
+//       'Content-Type': 'application/json'
+//     },
+//     body: JSON.stringify({username, password, email})
+//   })
+//   .then((response) => {
+//     try {
+//       if (response.status === 200){
+//         return response.json();
+//       }
+//     } catch(e){
+//       return (e)
+//     }
+//   })
+//   .then((res) => {
+//     return res;
+//   })
+//   .catch((err) => console.log(err));
+// };

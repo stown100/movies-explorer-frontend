@@ -1,9 +1,8 @@
 import React from 'react';
-import { Route, useHistory, Link } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import logo from '../../images/greenlogo.svg'
 
 function HeaderMain() {
-    const history = useHistory();
     return (
         <Route>
             <header className="header-main">

@@ -87,6 +87,7 @@
 @import url('../src/componenst/From/form__input_span.css');
 @import url('../src/componenst/From/form__input_span-hidden.css');
 @import url('../src/componenst//From/form__button.css');
+@import url('../src/componenst/From/form__button_disabled.css');
 
 @import url('../src/componenst/Login/register__text_login.css');
 @import url('../src/componenst/Login/register__link_login.css');
@@ -100,12 +101,17 @@
 @import url('../src/componenst/Footer/footer__text.css');
 
 @import url('../src/componenst/Movies/search/search.css');
+@import url('../src/componenst/Movies/search/search__block.css');
+@import url('../src/componenst/Movies/search/search__block_button.css');
+@import url('../src/componenst/Movies/search/search__block_button-disabled.css');
 @import url('../src/componenst/Movies/search/search__input.css');
+@import url('../src/componenst/Movies/search/search__input_red.css');
+@import url('../src/componenst/Movies/search/search__input_span.css');
+@import url('../src/componenst/Movies/FilterCheckbox/search__slider_text.css');
 
 @import url('../src/componenst/Movies/FilterCheckbox/filter-checkbox.css');
 @import url('../src/componenst/Movies/FilterCheckbox/filter-checkbox__button_of.css');
 @import url('../src/componenst/Movies/FilterCheckbox/filter-checkbox__button_on.css');
-@import url('../src/componenst/Movies/FilterCheckbox/search__slider_text.css');
 
 @import url('../src/componenst/MoviesCard/movies-card.css');
 @import url('../src/componenst/MoviesCard/movies-card__elem.css');
@@ -124,5 +130,7 @@
 @import url('../src/componenst/Profile/profile__form.css');
 @import url('../src/componenst/Profile/profile__form_input.css');
 @import url('../src/componenst/Profile/profile__form_input-red.css');
+@import url('../src/componenst/Profile/profile__form_label.css');
+@import url('../src/componenst/Profile/profile__form_unit.css');
 @import url('../src/componenst/Profile/profile__form_button.css');
 @import url('../src/componenst/Profile/profile__exit.css');
