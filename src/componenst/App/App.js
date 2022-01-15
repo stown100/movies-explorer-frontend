@@ -21,10 +21,8 @@ import UseInput from '../UseInput/UseInput';
 function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [moviesInfo, setMoviesInfo] = React.useState([]);
-  const [saviedMoviesInfo, setSaviedMoviesInfo] = React.useState([])
   const [visibleData, setVisibleData] = React.useState([])
   const [search, setSearch] = React.useState('');
-  const [moviesData, setMoviesData] = React.useState([])
   const [savedMovies, setSavedMovies] = React.useState([])
 
   const [currentUser, setCurrentUser] = React.useState({ name: '', email: '', password: '' });
@@ -46,7 +44,6 @@ function App() {
         .then(([data, moviesInfo, saveData]) => {
           setCurrentUser(data[0]);
           setMoviesInfo(moviesInfo);
-          setMoviesData(moviesInfo);
           setSavedMovies(saveData);
         })
         .catch(() => {
@@ -55,10 +52,12 @@ function App() {
     }
   }, [loggedIn])
 
+
+  //Отобразить 16 карточек
   React.useEffect(() => {
-    const arr = moviesData.slice(0, 15)
+    const arr = moviesInfo.slice(0, 16)
     setVisibleData(arr);
-  }, [moviesData])
+  }, [moviesInfo])
 
   //Добавление карточки App.js
   // const handleAddPlaceSubmit = async ({description, director, duration, image, movieId, owner, thumbnail, trailer, year, _id}) => {
@@ -89,15 +88,20 @@ function App() {
     const token = localStorage.getItem('jwt');
     mainApi.addTask(movieToSave, token)
       .then((newCard) => {
-        console.log('12')
-        setSaviedMoviesInfo([newCard, ...saviedMoviesInfo]);
+        setSavedMovies([newCard, ...savedMovies]);
       })
       .catch((err) => console.log(err))
   }
 
   //Удаление карточки
-  const removeCard = (id) => {
-    setVisibleData([...visibleData.filter(el => el.id !== id)]);
+  const removeCard = (_id) => {
+    debugger
+    const token = localStorage.getItem('jwt');
+    mainApi.deleteMovies(_id, token)
+      .then(() => {
+        setSavedMovies([...savedMovies.filter(el => el.movieId !== _id)]);
+      })
+      .catch(() => console.log('Что-то сломалось!'))
   }
 
   const auth = async (jwt) => {
@@ -178,16 +182,15 @@ function App() {
             </Route>
 
             <ProtectedRoute exact loggedIn={loggedIn} path="/movies"
-              moviesInfo={moviesInfo} setMoviesInfo={setMoviesInfo}
+              moviesInfo={moviesInfo}
               handleAddPlaceSubmit={handleAddPlaceSubmit}
               visibleData={visibleData} setVisibleData={setVisibleData}
               search={search} setSearch={setSearch}
-              text={text} textValid={textValid} moviesData={moviesData}
+              text={text} textValid={textValid} removeCard={removeCard}
               component={Movies} />
 
             <ProtectedRoute exact loggedIn={loggedIn} path="/saved-movies"
-              saviedMoviesInfo={saviedMoviesInfo} visibleData={visibleData} setVisibleData={setVisibleData}
-              search={search} setSearch={setSearch} removeCard={removeCard}
+              setSearch={setSearch} removeCard={removeCard}
               text={text} textValid={textValid} savedMovies={savedMovies}
               component={SavedMovies} />
 

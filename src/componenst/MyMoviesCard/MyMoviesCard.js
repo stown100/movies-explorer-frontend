@@ -1,9 +1,8 @@
 import React from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import removeCardIcon from '../../images/removeCardIcon.svg'
-// import MyCards from '../MyCards/MyCards';
 
-const MyMoviesCard = ({description, director, duration, image, movieId, owner, thumbnail, trailerLink, year, _id, onClick, link }) => {
+const MyMoviesCard = ({description, director, duration, image, movieId, owner, thumbnail, trailerLink, year, _id, onClick }) => {
     // console.log({description, director, duration, image, movieId, owner, thumbnail, trailerLink, year, _id, onClick, link })
     return (
         <MoviesCard onClick={onClick}

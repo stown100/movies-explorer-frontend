@@ -1,13 +1,12 @@
 import React from 'react';
 import Header from '../Header/Header';
-import MyCards from '../MyCards/MyCards';
 import Footer from '../Footer/Footer';
 import Preloader from '../Preloader/Preloader';
 import MyMoviesCard from '../MyMoviesCard/MyMoviesCard';
 import imgInp from '../../images/loupe.svg';
 
 
-const SavedMovies = ({ saviedMoviesInfo, setSaviedMoviesInfo, filtredMovise, search, setSearch, removeCard, text, textValid, savedMovies }) => {
+const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies }) => {
     const [onButton, setOnButton] = React.useState(false);
 
     console.log(savedMovies)
@@ -54,10 +53,10 @@ const SavedMovies = ({ saviedMoviesInfo, setSaviedMoviesInfo, filtredMovise, sea
             </div>
             <div className="movies-card">
                             {savedMovies.length > 0
-                    ? savedMovies.map(({description, director, duration, image, movieId, owner, thumbnail, trailer, year, _id, link }) =>
-                        <MyMoviesCard onClick={() => removeCard(movieId)} key={_id}
+                    ? savedMovies.map(({description, director, duration, image, movieId, owner, thumbnail, trailer, year, _id }) =>
+                        <MyMoviesCard onClick={() => removeCard(_id)} key={_id}
                         _id={_id} description={description} director={director} duration={duration} image={image} movieId={movieId} owner={owner}
-                        thumbnail={thumbnail} trailerLink={trailer} year={year} link={image.url} />)
+                        thumbnail={thumbnail} trailerLink={trailer} year={year} />)
                     : <Preloader /> }
                     {/* {savedMovies.length > 0
                         ? savedMovies.map(({ country, created_at, description, director, duration, image, nameEN, nameRU, trailerLink, updated_at, year, movieId, trailer, thumbnail }) =>

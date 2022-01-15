@@ -1,43 +1,29 @@
 import React from 'react';
 import Header from '../Header/Header'
 import Footer from '../Footer/Footer'
-// import MoviesCardList from '../MoviesCardList/MoviesCardList';
 import Preloader from '../Preloader/Preloader'
 import AllMoviesCard from '../AllMoviesCard/AllMoviesCard';
 import imgInp from '../../images/loupe.svg';
 
-function Movies({ moviesInfo, setMoviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData, search, setSearch, text, textValid, moviesData }) {
+function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData, search, setSearch, text, textValid, removeCard }) {
     const [onButton, setOnButton] = React.useState(false);
     const [index, setIndex] = React.useState(0);
+    const arr = moviesInfo.slice(0, 16 + index)
 
+    // Открыть ещё 4 карточки
     const handlerAddMovies = () => {
         setIndex(index + 4)
-        const arr = moviesData.slice(0, 15 + index)
         setVisibleData(arr);
     }
 
+    // Радиокнопка Короткометражки
     const shortFilms = () => {
         if (!onButton) {
-            console.log('true')
             setVisibleData([...moviesInfo.filter(el => el.duration <= 40)])
         } else {
-            console.log('false')
-            setVisibleData(moviesInfo)
+            setVisibleData(arr)
         }
     }
-
-    // Отображение +4 карточек, на кнопку 'ещё'
-    React.useEffect(() => {
-        const numberOfItems = 16 + (index);
-
-        const newArray = [];
-
-        for (let i = 0; i < moviesInfo.length; i++) {
-            if (i < numberOfItems)
-                newArray.push(moviesInfo[i])
-        }
-        setVisibleData(newArray);
-    }, [index])
 
     const handlerChange = (e) => {
         setSearch(e.target.value)
@@ -81,12 +67,12 @@ function Movies({ moviesInfo, setMoviesInfo, handleAddPlaceSubmit, visibleData, 
                 <p className="search__slider_text">Короткометражки</p>
             </div>
             <div className="movies-card">
-                {visibleData
+                {visibleData.length > 0
                     ? visibleData.map(({ country, created_at, description, director, duration, image, nameEN, nameRU, trailerLink, updated_at, year, id, trailer, thumbnail }) =>
-                        <AllMoviesCard key={id} nameRU={nameRU} nameEN={nameEN} trailerLink={trailerLink} alt={nameRU} duration={duration} link={trailerLink}
+                        <AllMoviesCard key={id} nameRU={nameRU} nameEN={nameEN} trailerLink={trailerLink} alt={nameRU} duration={duration}
                             image={`https://api.nomoreparties.co${image.url}`} country={country} created_at={created_at} description={description} director={director}
-                            updated_at={updated_at} year={year} handleAddPlaceSubmit={handleAddPlaceSubmit}
-                            movieId={id} trailer={trailerLink} thumbnail={trailerLink} />)
+                            updated_at={updated_at} year={year} handleAddPlaceSubmit={handleAddPlaceSubmit} _id={id}
+                            movieId={id} trailer={trailerLink} thumbnail={trailerLink} removeCard={removeCard} />)
                     : <Preloader />}
             </div>
             <div className="even">

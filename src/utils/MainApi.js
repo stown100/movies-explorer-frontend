@@ -36,7 +36,6 @@ class MainApi {
 
     //добавление новой карточки
     addTask(data, token) {
-        debugger
         return fetch(`${this.url}/movies`, {
             method: 'POST',
             headers: {
@@ -47,6 +46,17 @@ class MainApi {
             body: JSON.stringify(data)
         })
             .then(this._handleResponse)
+    }
+
+    deleteMovies(_id, token) {
+        return fetch(`${this.url}/movies/${_id}`, {
+            method: 'DELETE',
+            headers: {
+                authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(this._handleResponse)
     }
 
     getSavedMovies(token) {
