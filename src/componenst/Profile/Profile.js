@@ -66,7 +66,9 @@ const Profile = ({ onSignOut, userData, handleUpdateUser }) => {
                     {emailConfigValid && <span className="form__input_span">
                         Введите email длиной не менее 3 символов
                     </span>}
-                    <button className="profile__form_button">Редактировать</button>
+                    <button className={(nameConfigValid || emailConfigValid) ? "profile__form_button-disabled" : "profile__form_button"}
+                    disabled={!emailValidation.inputValid || !nameValidation.inputValid}
+                    >Редактировать</button>
                     <Link to="/" className="profile__exit" onClick={onSignOut}>Выйти из аккаунта</Link>
                 </form>
 

@@ -6,19 +6,18 @@ class MainApi {
         this.headers = headers;
     }
 
-    //Редактирование профиля(получаю данные с сервера)
+    //получаю данные профиля с сервера
     getUserInfo(token) {
         return fetch(`${this.url}/users/me`, {
-            // method: 'PATCH',
             headers: {
                 authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
-            // headers: this.headers,
         })
             .then(this._handleResponse)
     }
 
+    // Изменение данных профиля
     setUserInfo({ email, name }, token) {
         return fetch(`${this.url}/users/me`, {
             method: 'PATCH',
@@ -34,22 +33,22 @@ class MainApi {
             .then(this._handleResponse)
     }
 
-    //добавление новой карточки
-    addTask(data, token) {
+    //добавление фильма в избранное
+    addMovie(data, token) {
         return fetch(`${this.url}/movies`, {
             method: 'POST',
             headers: {
                 authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
-            // headers: this.headers,
             body: JSON.stringify(data)
         })
             .then(this._handleResponse)
     }
 
-    deleteMovies(_id, token) {
-        return fetch(`${this.url}/movies/${_id}`, {
+    // Удаление фильма из избранного
+    deleteMovies(movieId, token) {
+        return fetch(`${this.url}/movies/${movieId}`, {
             method: 'DELETE',
             headers: {
                 authorization: `Bearer ${token}`,
@@ -59,6 +58,7 @@ class MainApi {
         .then(this._handleResponse)
     }
 
+    // Получаю данные карточек со своего бэкенда
     getSavedMovies(token) {
         return fetch(`${this.url}/movies`, {
             method: 'GET',
@@ -68,15 +68,7 @@ class MainApi {
             },
             body: JSON.stringify()
         })
-            .then(this._savedMoviesData)
-    }
-
-    _savedMoviesData = (res) => {
-        if (res.ok) {
-            return res.json();
-        }
-        // если ошибка, отклоняем промис
-        return Promise.reject(`Ошибка: ${res.status}`);
+            .then(this._handleResponse)
     }
 
     _handleResponse = (res) => {

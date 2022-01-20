@@ -14,27 +14,23 @@ import mainApi from '../../utils/MainApi';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 import UseInput from '../UseInput/UseInput';
 
-
-// import MoviesCardList from '../MoviesCardList/MoviesCardList';
-
-
 function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [moviesInfo, setMoviesInfo] = React.useState([]);
-  const [visibleData, setVisibleData] = React.useState([])
+  const [visibleData, setVisibleData] = React.useState([]);
+  const [visibleSaveData, setVisibleSaveData] = React.useState([]);
   const [search, setSearch] = React.useState('');
   const [savedMovies, setSavedMovies] = React.useState([])
-
   const [currentUser, setCurrentUser] = React.useState({ name: '', email: '', password: '' });
   const [userData, setUserData] = React.useState({})
-  const [indexMovies, setIndexMovies] = React.useState(0);
 
   const history = useHistory();
 
   //Валидация форм поиска по фильмам
-  const text = UseInput('', { isEmpty: true, minLengthError: 2, maxLengthError: 30 });
+  const text = UseInput('', { isEmpty: true, maxLengthError: 30 });
   const textValid = ((text.isDirty && text.isEmpty) || (text.isDirty && text.minLengthError) || (text.isDirty && text.maxLengthError));
 
+  //Рендер данных на стр.
   React.useEffect(() => {
     const token = localStorage.getItem('jwt');
     if (token) {
@@ -52,24 +48,18 @@ function App() {
     }
   }, [loggedIn])
 
-
   //Отобразить 16 карточек
   React.useEffect(() => {
     const arr = moviesInfo.slice(0, 16)
     setVisibleData(arr);
-  }, [moviesInfo])
+  }, [moviesInfo]);
 
-  //Добавление карточки App.js
-  // const handleAddPlaceSubmit = async ({description, director, duration, image, movieId, owner, thumbnail, trailer, year, _id}) => {
-  //   const token = localStorage.getItem('jwt');
-  //   debugger
-  //   mainApi.addTask({description, director, duration, image, movieId, owner, thumbnail, trailer, year, _id}, token)
-  //   .then((newCard) => {
-  //     console.log('12')
-  //     setSaviedMoviesInfo([newCard, ...moviesInfo]);
-  //   })
-  //   .catch(() => console.log('Что-то сломалось!'))
-  // }
+  // //Отобразить 16 карточек в сохранённых
+  React.useEffect(() => {
+    const arr = savedMovies.slice(0, 16)
+    setVisibleSaveData(arr);
+  }, [savedMovies])
+
   // //Добавление карточки App.js
   const handleAddPlaceSubmit = async (movieToSave) => {
     movieToSave = {
@@ -78,7 +68,7 @@ function App() {
       duration: movieToSave.duration || 0,
       year: movieToSave.year || "",
       description: movieToSave.description || "",
-      image: movieToSave.link || "https://youtube.ru",
+      image: movieToSave.image,
       trailer: movieToSave.trailer || "https://youtube.ru",
       thumbnail: movieToSave.thumbnail || "https://youtube.ru",
       movieId: movieToSave.movieId,
@@ -86,7 +76,7 @@ function App() {
       nameEN: movieToSave.nameEN || "",
     };
     const token = localStorage.getItem('jwt');
-    mainApi.addTask(movieToSave, token)
+    mainApi.addMovie(movieToSave, token)
       .then((newCard) => {
         setSavedMovies([newCard, ...savedMovies]);
       })
@@ -95,15 +85,16 @@ function App() {
 
   //Удаление карточки
   const removeCard = (_id) => {
-    debugger
     const token = localStorage.getItem('jwt');
     mainApi.deleteMovies(_id, token)
       .then(() => {
         setSavedMovies([...savedMovies.filter(el => el.movieId !== _id)]);
       })
-      .catch(() => console.log('Что-то сломалось!'))
+      .catch((err) => console.log(err))
   }
 
+
+  //Получение данных пользователя
   const auth = async (jwt) => {
     return Auth.getContent(jwt)
       .then((res) => {
@@ -130,7 +121,7 @@ function App() {
 
   React.useEffect(() => {
     if (loggedIn) history.push('/movies');
-  }, [loggedIn]);
+  }, [history, loggedIn]);
 
   //Функция регистрации
   const onRegister = ({ name, email, password }) => {
@@ -162,6 +153,7 @@ function App() {
 
   }, [userData])
 
+  //Редактирование данных пользователя
   const handleUpdateUser = ({ email, name }) => {
     const token = localStorage.getItem('jwt');
     mainApi.setUserInfo({ name, email }, token)
@@ -186,12 +178,14 @@ function App() {
               handleAddPlaceSubmit={handleAddPlaceSubmit}
               visibleData={visibleData} setVisibleData={setVisibleData}
               search={search} setSearch={setSearch}
-              text={text} textValid={textValid} removeCard={removeCard}
+              text={text} textValid={textValid} removeCard={removeCard} savedMovies={savedMovies}
               component={Movies} />
 
             <ProtectedRoute exact loggedIn={loggedIn} path="/saved-movies"
               setSearch={setSearch} removeCard={removeCard}
-              text={text} textValid={textValid} savedMovies={savedMovies}
+              text={text} textValid={textValid} savedMovies={savedMovies} setSavedMovies={setSavedMovies}
+              visibleSaveData={visibleSaveData} setVisibleSaveData={setVisibleSaveData}
+              search={search} moviesInfo={moviesInfo}
               component={SavedMovies} />
 
             <ProtectedRoute exact loggedIn={loggedIn} path="/profile"

@@ -7,7 +7,7 @@ class Api {
     }
 
     getInitialMovies(token) {
-        return fetch(`${this.url}`, {
+        return fetch(`${this.url}/beatfilm-movies`, {
             method: 'GET',
             headers: {
                 authorization: `Bearer ${token}`,
@@ -27,7 +27,7 @@ class Api {
 }
 
 const api = new Api({
-    url: 'https://api.nomoreparties.co/beatfilm-movies',
+    url: 'https://api.nomoreparties.co',
 })
 
 export default api;
