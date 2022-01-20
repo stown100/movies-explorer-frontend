@@ -10,7 +10,7 @@ class Api {
         return fetch(`${this.url}/beatfilm-movies`, {
             method: 'GET',
             headers: {
-                authorization: `Bearer ${token}`,
+                // authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
             },
         })
