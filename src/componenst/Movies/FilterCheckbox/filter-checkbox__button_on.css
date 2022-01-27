@@ -1,7 +1,37 @@
 .filter-checkbox__button_on {
+    display: flex;
+    width: 36px;
+    height: 20px;
+    border-radius: 19px;
     background: #3DDC84;
+    z-index: 0;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    position: relative;
+    transition-duration: 300ms;
 }
 
 .filter-checkbox__button_on::after {
+    content: "";
+    height: 16px;
+    width: 16px;
+    border-radius: 17px;
+    background: #fff;
+    top: 2px;
     left: 20px;
+    transition-duration: 300ms;
+    position: absolute;
+}
+
+@media (min-width: 700px) and (max-width: 880px) {
+    .filter-checkbox__button_on {
+        margin: 0 0 0 16px;
+    }
+}
+
+@media (min-width: 320px) and (max-width: 700px) {
+    .filter-checkbox__button_on {
+        margin: 0 0 0 13px;
+    }
 }

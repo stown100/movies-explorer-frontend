@@ -4,7 +4,7 @@ import Header from '../Header/Header';
 import UseInput from '../UseInput/UseInput';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-const Profile = ({ onSignOut, userData, handleUpdateUser }) => {
+const Profile = ({ onSignOut, userData, handleUpdateUser, confirm, confirmError }) => {
     const currentUser = React.useContext(CurrentUserContext);
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
@@ -35,40 +35,50 @@ const Profile = ({ onSignOut, userData, handleUpdateUser }) => {
         <Route>
             <div className="profile">
                 <Header />
-                <div className="profile__title">{`Привет ${name}`}</div>
+                <div className="profile__title">{`Привет ${currentUser.name}`}</div>
                 <form className="profile__form" action="#" onSubmit={handleSubmit} noValidate>
 
                     <div className='profile__form_unit'>
-                        <input onChange={e => nameValidation.onChange(e)} onBlur={e => nameValidation.onBlur(e)}
-                            value={nameValidation.value} type="text"
+                        <input onChange={e => {
+                            setName(e.target.value)
+                            nameValidation.onChange(e)
+                        }} onBlur={e => nameValidation.onBlur(e)}
+                            value={name} type="text"
                             className={nameConfigValid
                                 ? "profile__form_input-red" : "profile__form_input"}
-                            placeholder="Имя" required>
+                            required>
                         </input>
                         <label className='profile__form_label'>
-                            {name}
+                            {currentUser.name}
                         </label>
                     </div>
                     {nameConfigValid && <span className="form__input_span">
                         Введите имя от 2 до 30 символов
                     </span>}
                     <div className='profile__form_unit'>
-                        <input onChange={e => emailValidation.onChange(e)} onBlur={e => emailValidation.onBlur(e)}
-                            value={emailValidation.value} type="email"
+                        <input onChange={e => {
+                            setEmail(e.target.value)
+                            emailValidation.onChange(e)
+                        }} onBlur={e => emailValidation.onBlur(e)}
+                            value={email} type="email"
                             className={emailConfigValid
-                                ? "profile__form_input-red" : "profile__form_input"} placeholder="email" required>
+                                ? "profile__form_input-red" : "profile__form_input"} required>
 
                         </input>
                         <label className='profile__form_label'>
-                            {email}
+                            {currentUser.email}
                         </label>
                     </div>
                     {emailConfigValid && <span className="form__input_span">
                         Введите email длиной не менее 3 символов
                     </span>}
                     <button className={(nameConfigValid || emailConfigValid) ? "profile__form_button-disabled" : "profile__form_button"}
-                    disabled={!emailValidation.inputValid || !nameValidation.inputValid}
+                        disabled={!emailValidation.inputValid || !nameValidation.inputValid}
                     >Редактировать</button>
+                    {<span className={`${confirm ? "profile__form-confirm_active" : "profile__form-confirm"}`}>Профиль успешно изменён.</span>}
+                    {<span className={`${confirmError ? "profile__form-confirm_error" : "profile__form-confirm"}`}>При обновлении профиля произошла ошибка.</span>}
+
+
                     <Link to="/" className="profile__exit" onClick={onSignOut}>Выйти из аккаунта</Link>
                 </form>
 

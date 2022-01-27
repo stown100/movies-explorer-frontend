@@ -20,7 +20,8 @@ const Register = ({ onRegister }) => {
         e.preventDefault();
         onRegister({ name, email, password })
             .then(() => history.push('/signin'))
-            .catch(() => history.push('/error'))
+            .then(() => history.push('/movies'))
+            .catch((err) => console.log(err))
 
     }
 
@@ -28,7 +29,7 @@ const Register = ({ onRegister }) => {
         if (localStorage.getItem('jwt')) {
             history.push('/movies');
         }
-    }, []);
+    }, [history]);
 
     return (
         <Form onSubmit={handleSubmit} title="Добро пожаловать" text="Вы уже зарегистрированны?" link="Войти" to="signin">

@@ -6,27 +6,39 @@ import MyMoviesCard from '../MyMoviesCard/MyMoviesCard';
 import imgInp from '../../images/loupe.svg';
 
 
-const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, moviesInfo, setSavedMovies, search, setVisibleSaveData, visibleSaveData }) => {
+const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, moviesInfo, setSavedMovies, search, setVisibleSaveData, visibleSaveData, preload }) => {
     const [onButton, setOnButton] = React.useState(false);
     const [index, setIndex] = React.useState(0);
     const arr = savedMovies.slice(0, 16 + index);
 
-    const arrLengthMax = savedMovies.length === visibleSaveData.length;
-    const arrLength = savedMovies.length > 16 || !arrLengthMax;
-    const classNameButton = `${arrLength ? "even__button" : "even__button_hidden"}` && `${arrLengthMax ? "even__button_hidden" : "even__button"}`
+    const filtredMovise = savedMovies.filter((movie) => movie.description.toLowerCase().includes(search.toLowerCase()));
+    const shortFilmsArray = [...savedMovies.filter(el => el.duration <= 40)];
+    const shortFilmsArrayAndSearch = shortFilmsArray.filter((movie) => movie.description.toLowerCase().includes(search.toLowerCase()));
+
+    const arrLength = filtredMovise.length > 16
+        && shortFilmsArray.length !== visibleSaveData.length
+        && shortFilmsArrayAndSearch.length !== visibleSaveData.length
+        && visibleSaveData.length !== savedMovies.length;
+
+    const classNameButton = `${arrLength ? "even__button" : "even__button_hidden"}`
 
     // Открыть ещё 4 карточки
     const handlerAddMovies = () => {
         setIndex(index + 4)
         setVisibleSaveData(arr);
     }
-    
+
     // Радиокнопка Короткометражки
     const shortFilms = () => {
         if (!onButton) {
-            setVisibleSaveData([...savedMovies.filter(el => el.duration <= 40)])
+            if (visibleSaveData.length > 0) {
+                if (filtredMovise[0]._id === visibleSaveData[0]._id) {
+                    return setVisibleSaveData(shortFilmsArrayAndSearch);
+                }
+                setVisibleSaveData(shortFilmsArray);
+            }
         } else {
-            setVisibleSaveData(arr)
+            setVisibleSaveData(filtredMovise.slice(0, 16 + index))
         }
     }
 
@@ -37,12 +49,14 @@ const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, movi
 
     // Поиск по сохранённым фильма
     const handlerSearchClick = (e) => {
-        e.preventDefault()
-        const filtredMovise = savedMovies.filter((movie) => {
-            return movie.description.toLowerCase().includes(search.toLowerCase());
-        })
-        if (search.length > 0) {
-            setVisibleSaveData(filtredMovise);
+        e.preventDefault();
+        if (shortFilmsArray.length > 0 && visibleSaveData.length > 0) {
+            if (shortFilmsArray[0]._id === visibleSaveData[0]._id) {
+                return setVisibleSaveData(shortFilmsArrayAndSearch);
+            }
+        }
+        if (search.length !== 0) {
+            setVisibleSaveData(filtredMovise)
         } else {
             setVisibleSaveData(arr);
         }
@@ -53,7 +67,7 @@ const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, movi
             <MyMoviesCard removeCard={removeCard} key={_id}
                 _id={_id} description={description} director={director} duration={duration} image={image} movieId={movieId} owner={owner}
                 thumbnail={thumbnail} trailerLink={trailer} year={year} />)
-        : <Preloader />
+        : <h2 className={shortFilmsArray.length === 0 ? "movies-card__title" : "movies-card__title_active"}>Ничего не найдено</h2>;
 
     return (
         <div className="movies">
@@ -85,6 +99,8 @@ const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, movi
                 <p className="search__slider_text">Короткометражки</p>
             </div>
             <div className="movies-card">
+            {preload && <Preloader />}
+
                 {render}
             </div>
             <div className="even">

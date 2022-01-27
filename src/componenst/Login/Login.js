@@ -17,10 +17,7 @@ const Login = ({ onLogin }) => {
         e.preventDefault();
         onLogin({ email, password })
             .then(() => history.push('/movies'))
-            .catch((err) => {
-                history.push('/error');
-                console.log(err)
-            })
+            .catch((err) => console.log(err))
     }
 
     return (

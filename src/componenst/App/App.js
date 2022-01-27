@@ -22,9 +22,13 @@ function App() {
   const [search, setSearch] = React.useState('');
   const [savedMovies, setSavedMovies] = React.useState([])
   const [currentUser, setCurrentUser] = React.useState({ name: '', email: '', password: '' });
-  const [userData, setUserData] = React.useState({})
+  const [userData, setUserData] = React.useState({});
+  const [confirm, setConfirm] = React.useState(false);
+  const [confirmError, setConfirmError] = React.useState(false);
+  const [preload, setPreload] = React.useState(false)
 
   const history = useHistory();
+  const location = history.location.pathname;
 
   //Валидация форм поиска по фильмам
   const text = UseInput('', { isEmpty: true, maxLengthError: 30 });
@@ -32,21 +36,52 @@ function App() {
 
   //Рендер данных на стр.
   React.useEffect(() => {
-    const token = localStorage.getItem('jwt');
-    if (token) {
-      Promise.all([mainApi.getUserInfo(token),
-      api.getInitialMovies(token), mainApi.getSavedMovies(token)
-      ])
-        .then(([data, moviesInfo, saveData]) => {
-          setCurrentUser(data[0]);
-          setMoviesInfo(moviesInfo);
-          setSavedMovies(saveData);
-        })
-        .catch(() => {
-          console.error('Что-то сломалось!')
-        })
+    if (loggedIn) {
+      const token = localStorage.getItem('jwt');
+      if (token) {
+        setPreload(true);
+        Promise.all([mainApi.getUserInfo(token),
+        api.getInitialMovies(token),
+        ])
+          .then(([data, moviesInfo]) => {
+            setCurrentUser(data[0]);
+            setMoviesInfo(moviesInfo);
+            setPreload(false);
+          })
+          .catch(() => {
+            console.error('Что-то сломалось!')
+          })
+      }
     }
   }, [loggedIn])
+
+
+  // Отвечает за то, чтоб у каждого пользователя были свои сохранённые фильмы
+  function filterSaveMovies(movies) {
+    const myId = currentUser._id;
+    const myMovies = movies.filter((movie) => {
+      const { owner = '' } = movie;
+      return myId === owner;
+    });
+    return myMovies;
+  }
+
+  // Рендер сохранённых карточек
+  React.useEffect(() => {
+    const token = localStorage.getItem('jwt');
+    if (currentUser) {
+      setPreload(true);
+      Promise.resolve(mainApi.getSavedMovies(token))
+        .then((savedMovies) => {
+          setSavedMovies(filterSaveMovies(savedMovies));
+          setPreload(false);
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    }
+  }, [currentUser])
+
 
   //Отобразить 16 карточек
   React.useEffect(() => {
@@ -107,28 +142,28 @@ function App() {
             email: resEmail.join(''),
             name: resName.join('')
           });
+          // history.push(location)
         }
       })
   };
 
   React.useEffect(() => {
     const jwt = localStorage.getItem('jwt');
-
     if (jwt) {
       auth(jwt);
+      history.push(location);
     }
-  }, [loggedIn]);
+  }, [history, location, loggedIn]);
 
-  React.useEffect(() => {
-    if (loggedIn) history.push('/movies');
-  }, [history, loggedIn]);
 
   //Функция регистрации
   const onRegister = ({ name, email, password }) => {
-    return Auth.register(name, email, password).then((res) => {
-      if (!res || res.statusCode === 400) throw new Error('Что-то пошло не так')
-      return res;
-    })
+    return Auth.register(name, email, password)
+      .then((res) => {
+        if (!res || res.statusCode === 400) throw new Error('Что-то пошло не так')
+        return res;
+      })
+      .then(() => onLogin({ email, password }))
   };
 
   //Функция авторизации
@@ -158,9 +193,18 @@ function App() {
     const token = localStorage.getItem('jwt');
     mainApi.setUserInfo({ name, email }, token)
       .then((data) => {
-        setCurrentUser(data);
+        if (data.email === currentUser.email) throw new Error('Такой email уже существует')
+        else {
+          setCurrentUser(data);
+          setConfirm(true);
+          setConfirmError(false);
+        }
       })
-      .catch(() => console.log('Что-то сломалось!'))
+      .catch((err) => {
+        setConfirm(false);
+        setConfirmError(true);
+        console.log(err)
+      })
   }
 
   return (
@@ -168,16 +212,15 @@ function App() {
       <div className="App">
         <div className="page">
           <Switch>
-
             <Route exact loggedIn={loggedIn} path="/">
-              <Main />
+              <Main loggedIn={loggedIn} />
             </Route>
 
             <ProtectedRoute exact loggedIn={loggedIn} path="/movies"
               moviesInfo={moviesInfo}
               handleAddPlaceSubmit={handleAddPlaceSubmit}
               visibleData={visibleData} setVisibleData={setVisibleData}
-              search={search} setSearch={setSearch}
+              search={search} setSearch={setSearch} preload={preload}
               text={text} textValid={textValid} removeCard={removeCard} savedMovies={savedMovies}
               component={Movies} />
 
@@ -185,13 +228,13 @@ function App() {
               setSearch={setSearch} removeCard={removeCard}
               text={text} textValid={textValid} savedMovies={savedMovies} setSavedMovies={setSavedMovies}
               visibleSaveData={visibleSaveData} setVisibleSaveData={setVisibleSaveData}
-              search={search} moviesInfo={moviesInfo}
+              search={search} moviesInfo={moviesInfo} preload={preload}
               component={SavedMovies} />
 
             <ProtectedRoute exact loggedIn={loggedIn} path="/profile"
               handleUpdateUser={handleUpdateUser}
               onSignOut={onSignOut}
-              userData={userData}
+              userData={userData} confirm={confirm} confirmError={confirmError}
               component={Profile} />
 
             <Route path="/error">
@@ -206,6 +249,10 @@ function App() {
               <Login
                 onLogin={onLogin}
               />
+            </Route>
+
+            <Route path='*'>
+              <ErrorHandler />
             </Route>
 
             <Route>

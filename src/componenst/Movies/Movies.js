@@ -6,14 +6,22 @@ import AllMoviesCard from '../AllMoviesCard/AllMoviesCard';
 import imgInp from '../../images/loupe.svg';
 
 
-function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData, search, setSearch, text, textValid, removeCard, savedMovies }) {
+function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData, search, setSearch, text, textValid, removeCard, savedMovies, preload }) {
     const [onButton, setOnButton] = React.useState(false);
     const [index, setIndex] = React.useState(0);
     const arr = moviesInfo.slice(0, 16 + index)
 
-    const arrLengthMax = moviesInfo.length === visibleData.length;
-    const arrLength = moviesInfo.length > 16 || !arrLengthMax;
-    const classNameButton = `${arrLength ? "even__button" : "even__button_hidden"}` && `${arrLengthMax ? "even__button_hidden" : "even__button"}`
+    const filtredMovise = moviesInfo.filter((movie) => movie.nameRU.toLowerCase().includes(search.toLowerCase()));
+    const shortFilmsArray = [...moviesInfo.filter(el => el.duration <= 40)];
+    const shortFilmsArrayAndSearch = shortFilmsArray.filter((movie) => movie.nameRU.toLowerCase().includes(search.toLowerCase()));
+
+    const arrLength = filtredMovise.length > 16
+        && shortFilmsArray.length !== visibleData.length
+        && shortFilmsArrayAndSearch.length !== visibleData.length
+        && visibleData.length !== moviesInfo.length;
+
+    const classNameButton = `${arrLength ? "even__button" : "even__button_hidden"}`
+
     // Открыть ещё 4 карточки
     const handlerAddMovies = () => {
         setIndex(index + 4)
@@ -23,9 +31,14 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData,
     // Радиокнопка Короткометражки
     const shortFilms = () => {
         if (!onButton) {
-            setVisibleData([...moviesInfo.filter(el => el.duration <= 40)])
+            if (shortFilmsArray.length > 0 && visibleData.length > 0) {
+                if (filtredMovise[0].id === visibleData[0].id) {
+                    return setVisibleData(shortFilmsArrayAndSearch);
+                }
+                setVisibleData(shortFilmsArray);
+            }
         } else {
-            setVisibleData(arr)
+            setVisibleData(filtredMovise.slice(0, 16 + index))
         }
     }
 
@@ -35,16 +48,35 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData,
     }
 
     const handlerSearchClick = (e) => {
-        e.preventDefault()
-        const filtredMovise = moviesInfo.filter((movie) => {
-            return movie.nameRU.toLowerCase().includes(search.toLowerCase());
-        })
+        e.preventDefault();
+        if (shortFilmsArray.length > 0 && visibleData.length > 0) {
+
+            if (shortFilmsArray[0].id === visibleData[0].id) {
+                return setVisibleData(shortFilmsArrayAndSearch);
+            }
+        }
         if (search.length !== 0) {
             setVisibleData(filtredMovise);
         } else {
             setVisibleData(arr);
         }
     }
+    console.log(onButton);
+
+    React.useEffect(() => {
+        setOnButton(JSON.parse(localStorage.getItem('onButton')));
+        // if(!onButton) {
+        //     shortFilms()
+        //     console.log('123')
+        // setVisibleData(JSON.parse(localStorage.getItem(visibleData)));
+
+        // }
+    }, [])
+
+    React.useEffect(() => {
+        localStorage.setItem('onButton', JSON.stringify(onButton));
+        // localStorage.setItem('visibleData', JSON.stringify(visibleData))
+    }, [onButton, visibleData]);
 
     const render = visibleData.length !== 0
         ? visibleData.map(({ country, created_at, description, director, duration, image, nameEN, nameRU, trailerLink, updated_at, year, id }) =>
@@ -52,7 +84,7 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData,
                 image={`https://api.nomoreparties.co${image.url}`} country={country} created_at={created_at} description={description} director={director}
                 updated_at={updated_at} year={year} handleAddPlaceSubmit={handleAddPlaceSubmit}
                 movieId={id} trailer={trailerLink} thumbnail={trailerLink} removeCard={removeCard} savedMovies={savedMovies} />)
-        : <Preloader />;
+        : <h2 className={shortFilmsArray.length === 0 ? "movies-card__title" : "movies-card__title_active"}>Ничего не найдено</h2>;
 
     return (
         <main className="movies">
@@ -82,15 +114,16 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData,
             </form>
             <div className="filter-checkbox">
                 <button
-                    className={`filter-checkbox__button_of ${onButton && "filter-checkbox__button_on"}`}
+                    className={onButton ? "filter-checkbox__button_on" : "filter-checkbox__button_of"}
                     onClick={() => {
-                        shortFilms()
-                        setOnButton(!onButton)
+                        setOnButton(!onButton);
+                        shortFilms();
                     }}>
                 </button>
                 <p className="search__slider_text">Короткометражки</p>
             </div>
             <div className="movies-card">
+                {preload && <Preloader />}
                 {render}
             </div>
             <div className="even">
