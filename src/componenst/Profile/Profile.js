@@ -55,7 +55,7 @@ const Profile = ({ onSignOut, userData, handleUpdateUser, confirm, confirmError 
                     {nameConfigValid && <span className="form__input_span">
                         Введите имя от 2 до 30 символов
                     </span>}
-                    <div className='profile__form_unit'>
+                    <div className='profile__form_unit-last'>
                         <input onChange={e => {
                             setEmail(e.target.value)
                             emailValidation.onChange(e)
@@ -72,11 +72,13 @@ const Profile = ({ onSignOut, userData, handleUpdateUser, confirm, confirmError 
                     {emailConfigValid && <span className="form__input_span">
                         Введите email длиной не менее 3 символов
                     </span>}
-                    <button className={(nameConfigValid || emailConfigValid) ? "profile__form_button-disabled" : "profile__form_button"}
-                        disabled={!emailValidation.inputValid || !nameValidation.inputValid}
-                    >Редактировать</button>
-                    {<span className={`${confirm ? "profile__form-confirm_active" : "profile__form-confirm"}`}>Профиль успешно изменён.</span>}
-                    {<span className={`${confirmError ? "profile__form-confirm_error" : "profile__form-confirm"}`}>При обновлении профиля произошла ошибка.</span>}
+                    <div className="profile__form_button-block">
+                        {<span className={`${confirm ? "profile__form-confirm_active" : "profile__form-confirm"}`}>Профиль успешно изменён.</span>}
+                        {<span className={`${confirmError ? "profile__form-confirm_error" : "profile__form-confirm"}`}>При обновлении профиля произошла ошибка.</span>}
+                        <button className={(nameConfigValid || emailConfigValid) ? "profile__form_button-disabled" : "profile__form_button"}
+                            disabled={!emailValidation.inputValid || !nameValidation.inputValid}
+                        >Редактировать</button>
+                    </div>
 
 
                     <Link to="/" className="profile__exit" onClick={onSignOut}>Выйти из аккаунта</Link>

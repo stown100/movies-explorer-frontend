@@ -25,7 +25,9 @@ function App() {
   const [userData, setUserData] = React.useState({});
   const [confirm, setConfirm] = React.useState(false);
   const [confirmError, setConfirmError] = React.useState(false);
-  const [preload, setPreload] = React.useState(false)
+  const [preload, setPreload] = React.useState(false);
+  const [onButton, setOnButton] = React.useState(false);
+
 
   const history = useHistory();
   const location = history.location.pathname;
@@ -47,6 +49,7 @@ function App() {
             setCurrentUser(data[0]);
             setMoviesInfo(moviesInfo);
             setPreload(false);
+            setVisibleData(JSON.parse(localStorage.setItem('visibleData')));
           })
           .catch(() => {
             console.error('Что-то сломалось!')
@@ -128,6 +131,15 @@ function App() {
       .catch((err) => console.log(err))
   }
 
+  //Чекбокс короткометражки
+  React.useEffect(() => {
+    setOnButton(JSON.parse(localStorage.getItem('onButton')));
+  }, [])
+
+  React.useEffect(() => {
+    localStorage.setItem('onButton', JSON.stringify(onButton));
+  }, [onButton]);
+
 
   //Получение данных пользователя
   const auth = async (jwt) => {
@@ -181,6 +193,10 @@ function App() {
   const onSignOut = () => {
     localStorage.removeItem('jwt');
     setLoggedIn(false);
+    setVisibleData(localStorage.getItem('visibleData'));
+    setVisibleData(localStorage.removeItem('visibleData'));
+    setOnButton(localStorage.removeItem('onButton'));
+
     history.push('/');
   };
 
@@ -217,7 +233,7 @@ function App() {
             </Route>
 
             <ProtectedRoute exact loggedIn={loggedIn} path="/movies"
-              moviesInfo={moviesInfo}
+              moviesInfo={moviesInfo} onButton={onButton} setOnButton={setOnButton}
               handleAddPlaceSubmit={handleAddPlaceSubmit}
               visibleData={visibleData} setVisibleData={setVisibleData}
               search={search} setSearch={setSearch} preload={preload}

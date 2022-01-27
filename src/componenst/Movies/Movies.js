@@ -6,8 +6,8 @@ import AllMoviesCard from '../AllMoviesCard/AllMoviesCard';
 import imgInp from '../../images/loupe.svg';
 
 
-function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData, search, setSearch, text, textValid, removeCard, savedMovies, preload }) {
-    const [onButton, setOnButton] = React.useState(false);
+function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, 
+    setVisibleData, search, setSearch, text, textValid, removeCard, savedMovies, preload, onButton, setOnButton }) {
     const [index, setIndex] = React.useState(0);
     const arr = moviesInfo.slice(0, 16 + index)
 
@@ -61,22 +61,6 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData,
             setVisibleData(arr);
         }
     }
-    console.log(onButton);
-
-    React.useEffect(() => {
-        setOnButton(JSON.parse(localStorage.getItem('onButton')));
-        // if(!onButton) {
-        //     shortFilms()
-        //     console.log('123')
-        // setVisibleData(JSON.parse(localStorage.getItem(visibleData)));
-
-        // }
-    }, [])
-
-    React.useEffect(() => {
-        localStorage.setItem('onButton', JSON.stringify(onButton));
-        // localStorage.setItem('visibleData', JSON.stringify(visibleData))
-    }, [onButton, visibleData]);
 
     const render = visibleData.length !== 0
         ? visibleData.map(({ country, created_at, description, director, duration, image, nameEN, nameRU, trailerLink, updated_at, year, id }) =>
@@ -100,14 +84,8 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, setVisibleData,
                         Нужно ввести ключевое слово
                     </span>}
                     <button
-                        // disabled={!text.inputValid} 
                         type="submit"
-                        className={
-                            // `${textValid 
-                            // ? 'search__block_button-disabled' :
-                            'search__block_button'
-                            // }`
-                        }>
+                        className={'search__block_button'}>
                         <img src={imgInp} alt="search" />
                     </button>
                 </div>

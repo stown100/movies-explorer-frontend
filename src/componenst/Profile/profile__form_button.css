@@ -1,5 +1,5 @@
 .profile__form_button {
-    margin: 220px auto 0;
+    margin: 0 auto 0;
     background-color: #202020;
     border: 0;
     font-weight: normal;
@@ -10,7 +10,7 @@
 }
 
 .profile__form_button-disabled {
-    margin: 220px auto 0;
+    margin: 0 auto 0;
     background-color: #202020;
     border: 0;
     font-weight: normal;
