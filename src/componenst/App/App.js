@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, Switch, useHistory, Redirect } from 'react-router-dom';
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
+import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
+import ProtectedRouteAuth from '../ProtectedRouteAuth.js/ProtectedRouteAuth';
 import Main from '../Main/Main';
 import ErrorHandler from '../ErrorHandler/ErrorHandler';
 import Register from '../Register/Register';
@@ -28,13 +29,19 @@ function App() {
   const [preload, setPreload] = React.useState(false);
   const [onButton, setOnButton] = React.useState(false);
 
-
   const history = useHistory();
   const location = history.location.pathname;
 
   //Валидация форм поиска по фильмам
   const text = UseInput('', { isEmpty: true, maxLengthError: 30 });
   const textValid = ((text.isDirty && text.isEmpty) || (text.isDirty && text.minLengthError) || (text.isDirty && text.maxLengthError));
+
+  const [textState, setTextState] = React.useState('');
+
+
+  //Валидация форм поиска по сохранённым фильмам
+  const textSave = UseInput('', { isEmpty: true, maxLengthError: 30 });
+  const textSaveValid = ((text.isDirty && text.isEmpty) || (text.isDirty && text.minLengthError) || (text.isDirty && text.maxLengthError));
 
   //Рендер данных на стр.
   React.useEffect(() => {
@@ -48,16 +55,36 @@ function App() {
           .then(([data, moviesInfo]) => {
             setCurrentUser(data[0]);
             setMoviesInfo(moviesInfo);
-            setPreload(false);
-            setVisibleData(JSON.parse(localStorage.setItem('visibleData')));
+            if (moviesInfo.length === 0) {
+              setPreload(true);
+            } else {
+              setPreload(false);
+            }
           })
-          .catch(() => {
-            console.error('Что-то сломалось!')
+          .catch((err) => {
+            console.error(err)
           })
       }
     }
   }, [loggedIn])
 
+
+  // //Сохранение состояния поиска (результат поиска фильмов)
+  React.useEffect(() => {
+    setVisibleData(JSON.parse(localStorage.getItem('visibleData')));
+  }, [])
+
+  React.useEffect(() => {
+    localStorage.setItem('visibleData', JSON.stringify(visibleData));
+  }, [visibleData]);
+
+  // Сохранение состояния строки поиска фильмов
+  React.useEffect(() => {
+    setTextState(JSON.parse(localStorage.getItem('textState')));
+  }, [])
+  React.useEffect(() => {
+    localStorage.setItem('textState', JSON.stringify(textState));
+  }, [textState])
 
   // Отвечает за то, чтоб у каждого пользователя были свои сохранённые фильмы
   function filterSaveMovies(movies) {
@@ -76,8 +103,8 @@ function App() {
       setPreload(true);
       Promise.resolve(mainApi.getSavedMovies(token))
         .then((savedMovies) => {
-          setSavedMovies(filterSaveMovies(savedMovies));
-          setPreload(false);
+          setSavedMovies(filterSaveMovies(savedMovies));   
+          // savedMovies.length > 0 ? setSavedMovies(filterSaveMovies(savedMovies)) : setPreload(true);
         })
         .catch((err) => {
           console.error(err)
@@ -86,11 +113,11 @@ function App() {
   }, [currentUser])
 
 
-  //Отобразить 16 карточек
-  React.useEffect(() => {
-    const arr = moviesInfo.slice(0, 16)
-    setVisibleData(arr);
-  }, [moviesInfo]);
+  // //Отобразить 16 карточек
+  // React.useEffect(() => {
+  //   const arr = moviesInfo.slice(0, 16)
+  //   setVisibleData(arr);
+  // }, [moviesInfo]);
 
   // //Отобразить 16 карточек в сохранённых
   React.useEffect(() => {
@@ -185,18 +212,25 @@ function App() {
       else {
         localStorage.setItem('jwt', res.token);
         setLoggedIn(true);
+        history.push('/movies')
       }
     })
   };
 
   // Выйти из акаунта
   const onSignOut = () => {
+    // удаляем токен
     localStorage.removeItem('jwt');
     setLoggedIn(false);
-    setVisibleData(localStorage.getItem('visibleData'));
+    // обновляю стостояние показанных фильмов
     setVisibleData(localStorage.removeItem('visibleData'));
-    setOnButton(localStorage.removeItem('onButton'));
-
+    // обновляю состояние радмокнипки
+    setOnButton(false);
+    // очистка строки поиска
+    setTextState('')
+    // обновляю стостояние показанных фильмов
+    const arr = moviesInfo.slice(0, 16)
+    setVisibleData(arr);
     history.push('/');
   };
 
@@ -207,14 +241,12 @@ function App() {
   //Редактирование данных пользователя
   const handleUpdateUser = ({ email, name }) => {
     const token = localStorage.getItem('jwt');
+    // if (email === currentUser.email) throw new Error('Такой email уже существует')
     mainApi.setUserInfo({ name, email }, token)
       .then((data) => {
-        if (data.email === currentUser.email) throw new Error('Такой email уже существует')
-        else {
-          setCurrentUser(data);
-          setConfirm(true);
-          setConfirmError(false);
-        }
+        setCurrentUser(data);
+        setConfirm(true);
+        setConfirmError(false);
       })
       .catch((err) => {
         setConfirm(false);
@@ -235,40 +267,33 @@ function App() {
             <ProtectedRoute exact loggedIn={loggedIn} path="/movies"
               moviesInfo={moviesInfo} onButton={onButton} setOnButton={setOnButton}
               handleAddPlaceSubmit={handleAddPlaceSubmit}
+              setTextState={setTextState} textState={textState}
               visibleData={visibleData} setVisibleData={setVisibleData}
               search={search} setSearch={setSearch} preload={preload}
-              text={text} textValid={textValid} removeCard={removeCard} savedMovies={savedMovies}
+              text={text} textValid={textValid} removeCard={removeCard} savedMovies={savedMovies} setPreload={setPreload}
               component={Movies} />
 
             <ProtectedRoute exact loggedIn={loggedIn} path="/saved-movies"
               setSearch={setSearch} removeCard={removeCard}
-              text={text} textValid={textValid} savedMovies={savedMovies} setSavedMovies={setSavedMovies}
+              text={textSave} textValid={textSaveValid} savedMovies={savedMovies} setSavedMovies={setSavedMovies}
               visibleSaveData={visibleSaveData} setVisibleSaveData={setVisibleSaveData}
-              search={search} moviesInfo={moviesInfo} preload={preload}
+              search={search} moviesInfo={moviesInfo} preload={preload} setPreload={setPreload}
               component={SavedMovies} />
 
             <ProtectedRoute exact loggedIn={loggedIn} path="/profile"
               handleUpdateUser={handleUpdateUser}
-              onSignOut={onSignOut}
+              onSignOut={onSignOut} setConfirm={setConfirm} setConfirmError={setConfirmError}
               userData={userData} confirm={confirm} confirmError={confirmError}
               component={Profile} />
 
-            <Route path="/error">
-              <ErrorHandler />
-            </Route>
+            <ProtectedRouteAuth exact loggedIn={loggedIn} path="/signup"
+              component={Register} onRegister={onRegister} />
 
-            <Route path="/signup">
-              <Register onRegister={onRegister} />
-            </Route>
-
-            <Route path="/signin">
-              <Login
-                onLogin={onLogin}
-              />
-            </Route>
+            <ProtectedRouteAuth exact loggedIn={loggedIn} path="/signin"
+              component={Login} onLogin={onLogin} />
 
             <Route path='*'>
-              <ErrorHandler />
+              <ErrorHandler location={location} />
             </Route>
 
             <Route>

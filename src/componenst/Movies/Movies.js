@@ -6,8 +6,8 @@ import AllMoviesCard from '../AllMoviesCard/AllMoviesCard';
 import imgInp from '../../images/loupe.svg';
 
 
-function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData, 
-    setVisibleData, search, setSearch, text, textValid, removeCard, savedMovies, preload, onButton, setOnButton }) {
+function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
+    setVisibleData, search, setSearch, text, textValid, removeCard, savedMovies, preload, onButton, setOnButton, setTextState, textState, setPreload }) {
     const [index, setIndex] = React.useState(0);
     const arr = moviesInfo.slice(0, 16 + index)
 
@@ -43,23 +43,16 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
     }
 
     const handlerChange = (e) => {
+        setTextState(e.target.value)
         setSearch(e.target.value)
         text.onChange(e)
     }
 
+    // Функция поиска фильмов
     const handlerSearchClick = (e) => {
         e.preventDefault();
-        if (shortFilmsArray.length > 0 && visibleData.length > 0) {
-
-            if (shortFilmsArray[0].id === visibleData[0].id) {
-                return setVisibleData(shortFilmsArrayAndSearch);
-            }
-        }
-        if (search.length !== 0) {
-            setVisibleData(filtredMovise);
-        } else {
-            setVisibleData(arr);
-        }
+        if (onButton) return search.length !== 0 ? setVisibleData(shortFilmsArrayAndSearch) : setVisibleData(shortFilmsArray);
+        search.length !== 0 ? setVisibleData(filtredMovise) : setVisibleData(arr);
     }
 
     const render = visibleData.length !== 0
@@ -76,7 +69,7 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
             <form className="search" onSubmit={handlerSearchClick} noValidate>
                 <div className="search__block">
                     <input onChange={handlerChange} onBlur={e => text.onBlur(e)}
-                        value={text.value} type="text"
+                        value={textState} type="text"
                         className={textValid
                             ? 'search__input_red'
                             : 'search__input'} placeholder="Фильм"></input>

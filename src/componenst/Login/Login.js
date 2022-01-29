@@ -15,7 +15,7 @@ const Login = ({ onLogin }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        onLogin({ email, password })
+        return onLogin({ email, password })
             .then(() => history.push('/movies'))
             .catch((err) => console.log(err))
     }
@@ -37,7 +37,7 @@ const Login = ({ onLogin }) => {
                 onBlur={e => emailValidation.onBlur(e)}
             />
             {emailConfigValid && <span className="form__input_span">
-                Введите email, длиной не менее 3 символов
+                Введите email адрес.
             </span>}
             <p className="form__text-input">Пароль</p>
             <input

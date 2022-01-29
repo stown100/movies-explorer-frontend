@@ -6,7 +6,7 @@ import MyMoviesCard from '../MyMoviesCard/MyMoviesCard';
 import imgInp from '../../images/loupe.svg';
 
 
-const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, moviesInfo, setSavedMovies, search, setVisibleSaveData, visibleSaveData, preload }) => {
+const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, search, setVisibleSaveData, visibleSaveData, preload, setPreload }) => {
     const [onButton, setOnButton] = React.useState(false);
     const [index, setIndex] = React.useState(0);
     const arr = savedMovies.slice(0, 16 + index);
@@ -20,13 +20,14 @@ const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, movi
         && shortFilmsArrayAndSearch.length !== visibleSaveData.length
         && visibleSaveData.length !== savedMovies.length;
 
-    const classNameButton = `${arrLength ? "even__button" : "even__button_hidden"}`
+    const classNameButton = `${arrLength && visibleSaveData.length !== 0 ? "even__button" : "even__button_hidden"}`
 
     // Открыть ещё 4 карточки
     const handlerAddMovies = () => {
         setIndex(index + 4)
         setVisibleSaveData(arr);
     }
+
 
     // Радиокнопка Короткометражки
     const shortFilms = () => {
@@ -47,27 +48,21 @@ const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, movi
         text.onChange(e)
     }
 
-    // Поиск по сохранённым фильма
+    // Функция поиска сохранённых фильмов
     const handlerSearchClick = (e) => {
         e.preventDefault();
-        if (shortFilmsArray.length > 0 && visibleSaveData.length > 0) {
-            if (shortFilmsArray[0]._id === visibleSaveData[0]._id) {
-                return setVisibleSaveData(shortFilmsArrayAndSearch);
-            }
-        }
-        if (search.length !== 0) {
-            setVisibleSaveData(filtredMovise)
-        } else {
-            setVisibleSaveData(arr);
-        }
+        if (onButton) return search.length !== 0 ? setVisibleSaveData(shortFilmsArrayAndSearch) : setVisibleSaveData(shortFilmsArray);
+        search.length !== 0 ? setVisibleSaveData(filtredMovise) : setVisibleSaveData(arr);
     }
+    const tests = (shortFilmsArray.length === 0 || filtredMovise.length === 0 || shortFilmsArrayAndSearch.length === 0) && visibleSaveData.length === 0 && savedMovies.length !== 0
+    console.log(savedMovies.length)
 
-    const render = visibleSaveData.length > 0
+    const render = visibleSaveData.length !== 0
         ? visibleSaveData.map(({ description, director, duration, image, movieId, owner, thumbnail, trailer, year, _id }) =>
             <MyMoviesCard removeCard={removeCard} key={_id}
                 _id={_id} description={description} director={director} duration={duration} image={image} movieId={movieId} owner={owner}
                 thumbnail={thumbnail} trailerLink={trailer} year={year} />)
-        : <h2 className={shortFilmsArray.length === 0 ? "movies-card__title" : "movies-card__title_active"}>Ничего не найдено</h2>;
+        : <h2 className={tests ? "movies-card__title_active" : "movies-card__title"}>Ничего не найдено</h2>;
 
     return (
         <div className="movies">
@@ -99,8 +94,7 @@ const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, movi
                 <p className="search__slider_text">Короткометражки</p>
             </div>
             <div className="movies-card">
-            {preload && <Preloader />}
-
+                {preload && <Preloader />}
                 {render}
             </div>
             <div className="even">

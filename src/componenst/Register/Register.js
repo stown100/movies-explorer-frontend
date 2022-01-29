@@ -64,7 +64,7 @@ const Register = ({ onRegister }) => {
                     onBlur={e => emailValidation.onBlur(e)}
             />
             {emailConfigValid && <span className="form__input_span">
-                Введите email, длиной не менее 3 символов
+                Введите email адрес.
             </span>}
 
             <p className="form__text-input">Пароль</p>

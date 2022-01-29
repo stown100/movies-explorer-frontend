@@ -1,5 +1,5 @@
 import React from 'react';
-const MoviesCard = ({ country, created_at, description, director, duration, image, nameEN, nameRU, trailerLink, updated_at, year, onClick, children, movieId, trailer, thumbnail }) => {
+const MoviesCard = ({ duration, image, nameRU, trailerLink, children }) => {
     return (
         <article className="movies-card__elem">
             <a href={trailerLink} target='_blank' rel='noreferrer'>

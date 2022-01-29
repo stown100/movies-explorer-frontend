@@ -4,7 +4,7 @@ import Header from '../Header/Header';
 import UseInput from '../UseInput/UseInput';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext';
 
-const Profile = ({ onSignOut, userData, handleUpdateUser, confirm, confirmError }) => {
+const Profile = ({ onSignOut, handleUpdateUser, confirm, confirmError, setConfirm, setConfirmError }) => {
     const currentUser = React.useContext(CurrentUserContext);
     const [name, setName] = React.useState('');
     const [email, setEmail] = React.useState('');
@@ -25,10 +25,15 @@ const Profile = ({ onSignOut, userData, handleUpdateUser, confirm, confirmError 
         // Запрещаем браузеру переходить по адресу формы
         e.preventDefault();
         // Передаём значения управляемых компонентов во внешний обработчик
-        handleUpdateUser({
-            name: nameValidation.value,
-            email: emailValidation.value,
-        });
+        if (email !== currentUser.email) {
+            handleUpdateUser({
+                name: nameValidation.value,
+                email: emailValidation.value,
+            });
+        } else {
+            setConfirm(false);
+            setConfirmError(true);
+        }
     }
 
     return (
@@ -70,7 +75,7 @@ const Profile = ({ onSignOut, userData, handleUpdateUser, confirm, confirmError 
                         </label>
                     </div>
                     {emailConfigValid && <span className="form__input_span">
-                        Введите email длиной не менее 3 символов
+                        Введите email адрес.
                     </span>}
                     <div className="profile__form_button-block">
                         {<span className={`${confirm ? "profile__form-confirm_active" : "profile__form-confirm"}`}>Профиль успешно изменён.</span>}
