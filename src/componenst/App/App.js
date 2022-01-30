@@ -48,18 +48,16 @@ function App() {
     if (loggedIn) {
       const token = localStorage.getItem('jwt');
       if (token) {
-        setPreload(true);
+        // setPreload(true); // Показываю прелоадер
         Promise.all([mainApi.getUserInfo(token),
         api.getInitialMovies(token),
         ])
           .then(([data, moviesInfo]) => {
             setCurrentUser(data[0]);
-            setMoviesInfo(moviesInfo);
-            if (moviesInfo.length === 0) {
-              setPreload(true);
-            } else {
-              setPreload(false);
-            }
+            setMoviesInfo(moviesInfo); // Рендер фильмов
+            // if (moviesInfo.length > 0) {
+            //   setPreload(false); // Скрываю прелоадер
+            // }
           })
           .catch((err) => {
             console.error(err)
@@ -68,10 +66,11 @@ function App() {
     }
   }, [loggedIn])
 
-
   // //Сохранение состояния поиска (результат поиска фильмов)
   React.useEffect(() => {
+    // setPreload(true);
     setVisibleData(JSON.parse(localStorage.getItem('visibleData')));
+    // setPreload(false);
   }, [])
 
   React.useEffect(() => {
@@ -100,11 +99,13 @@ function App() {
   React.useEffect(() => {
     const token = localStorage.getItem('jwt');
     if (currentUser) {
-      setPreload(true);
+      // setPreload(true);
       Promise.resolve(mainApi.getSavedMovies(token))
         .then((savedMovies) => {
-          setSavedMovies(filterSaveMovies(savedMovies));   
-          // savedMovies.length > 0 ? setSavedMovies(filterSaveMovies(savedMovies)) : setPreload(true);
+          setSavedMovies(filterSaveMovies(savedMovies));  
+          // if (savedMovies.length > 0) {
+          //   setPreload(false);
+          // } 
         })
         .catch((err) => {
           console.error(err)
@@ -112,17 +113,13 @@ function App() {
     }
   }, [currentUser])
 
-
-  // //Отобразить 16 карточек
-  // React.useEffect(() => {
-  //   const arr = moviesInfo.slice(0, 16)
-  //   setVisibleData(arr);
-  // }, [moviesInfo]);
-
   // //Отобразить 16 карточек в сохранённых
   React.useEffect(() => {
+    // setPreload(true);
     const arr = savedMovies.slice(0, 16)
     setVisibleSaveData(arr);
+    // setPreload(false);
+
   }, [savedMovies])
 
   // //Добавление карточки App.js
@@ -231,6 +228,9 @@ function App() {
     // обновляю стостояние показанных фильмов
     const arr = moviesInfo.slice(0, 16)
     setVisibleData(arr);
+    // Скидываю сообщение об ошибке/удаче смены пользователя
+    setConfirm(false);
+    setConfirmError(false);
     history.push('/');
   };
 

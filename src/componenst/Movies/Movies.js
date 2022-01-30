@@ -30,15 +30,18 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
 
     // Радиокнопка Короткометражки
     const shortFilms = () => {
+        setPreload(true);
         if (!onButton) {
             if (shortFilmsArray.length > 0 && visibleData.length > 0) {
-                if (filtredMovise[0].id === visibleData[0].id) {
-                    return setVisibleData(shortFilmsArrayAndSearch);
-                }
                 setVisibleData(shortFilmsArray);
+                setPreload(false)
+            }
+            if (search.length !== 0) {
+                setVisibleData(shortFilmsArrayAndSearch)
             }
         } else {
             setVisibleData(filtredMovise.slice(0, 16 + index))
+            setPreload(false)
         }
     }
 
@@ -51,8 +54,25 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
     // Функция поиска фильмов
     const handlerSearchClick = (e) => {
         e.preventDefault();
-        if (onButton) return search.length !== 0 ? setVisibleData(shortFilmsArrayAndSearch) : setVisibleData(shortFilmsArray);
-        search.length !== 0 ? setVisibleData(filtredMovise) : setVisibleData(arr);
+        setPreload(true); // Показываю прелоадер
+        if (onButton) {
+            if (search.length !== 0) {
+                setVisibleData(shortFilmsArrayAndSearch)
+                setPreload(false); // Скрываю
+            } else {
+                setVisibleData(shortFilmsArray)
+                setPreload(false); // Скрываю
+            }
+        }
+        if (!onButton) {
+            if (search.length !== 0) {
+                setVisibleData(filtredMovise)
+                setPreload(false); // Скрываю
+            } else {
+                setVisibleData(arr);
+                setPreload(false); // Скрываю
+            }
+        }
     }
 
     const render = visibleData.length !== 0
@@ -66,7 +86,9 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
     return (
         <main className="movies">
             <Header />
-            <form className="search" onSubmit={handlerSearchClick} noValidate>
+            <form className="search" onSubmit={(e) => {
+                handlerSearchClick(e)
+            }} noValidate>
                 <div className="search__block">
                     <input onChange={handlerChange} onBlur={e => text.onBlur(e)}
                         value={textState} type="text"

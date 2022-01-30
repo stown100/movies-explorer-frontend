@@ -28,34 +28,53 @@ const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, sear
         setVisibleSaveData(arr);
     }
 
-
-    // Радиокнопка Короткометражки
-    const shortFilms = () => {
-        if (!onButton) {
-            if (visibleSaveData.length > 0) {
-                if (filtredMovise[0]._id === visibleSaveData[0]._id) {
-                    return setVisibleSaveData(shortFilmsArrayAndSearch);
+        // Радиокнопка Короткометражки
+        const shortFilms = () => {
+            setPreload(true);
+            if (!onButton) {
+                if (shortFilmsArray.length > 0 && visibleSaveData.length > 0) {
+                    setVisibleSaveData(shortFilmsArray);
+                    setPreload(false)
                 }
-                setVisibleSaveData(shortFilmsArray);
+                if (search.length !== 0) {
+                    setVisibleSaveData(shortFilmsArrayAndSearch)
+                }
+            } else {
+                setVisibleSaveData(filtredMovise.slice(0, 16 + index))
+                setPreload(false)
             }
-        } else {
-            setVisibleSaveData(filtredMovise.slice(0, 16 + index))
         }
-    }
 
     const handlerChange = (e) => {
         setSearch(e.target.value)
         text.onChange(e)
     }
 
-    // Функция поиска сохранённых фильмов
-    const handlerSearchClick = (e) => {
-        e.preventDefault();
-        if (onButton) return search.length !== 0 ? setVisibleSaveData(shortFilmsArrayAndSearch) : setVisibleSaveData(shortFilmsArray);
-        search.length !== 0 ? setVisibleSaveData(filtredMovise) : setVisibleSaveData(arr);
-    }
+        // Функция поиска фильмов
+        const handlerSearchClick = (e) => {
+            e.preventDefault();
+            setPreload(true); // Показываю прелоадер
+            if (onButton) {
+                if (search.length !== 0) {
+                    setVisibleSaveData(shortFilmsArrayAndSearch)
+                    setPreload(false); // Скрываю
+                } else {
+                    setVisibleSaveData(shortFilmsArray)
+                    setPreload(false); // Скрываю
+                }
+            }
+            if (!onButton) {
+                if (search.length !== 0) {
+                    setVisibleSaveData(filtredMovise)
+                    setPreload(false); // Скрываю
+                } else {
+                    setVisibleSaveData(arr);
+                    setPreload(false); // Скрываю
+                }
+            }
+        }
+
     const tests = (shortFilmsArray.length === 0 || filtredMovise.length === 0 || shortFilmsArrayAndSearch.length === 0) && visibleSaveData.length === 0 && savedMovies.length !== 0
-    console.log(savedMovies.length)
 
     const render = visibleSaveData.length !== 0
         ? visibleSaveData.map(({ description, director, duration, image, movieId, owner, thumbnail, trailer, year, _id }) =>
@@ -65,7 +84,7 @@ const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, sear
         : <h2 className={tests ? "movies-card__title_active" : "movies-card__title"}>Ничего не найдено</h2>;
 
     return (
-        <div className="movies">
+        <main className="movies">
             <Header />
             <form className="search" onSubmit={handlerSearchClick} noValidate>
                 <div className="search__block">
@@ -103,7 +122,7 @@ const SavedMovies = ({ setSearch, removeCard, text, textValid, savedMovies, sear
                     className={classNameButton}>Ещё</button>
             </div>
             <Footer />
-        </div>
+        </main>
     )
 }
 

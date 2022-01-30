@@ -105,6 +105,7 @@
 @import url('../src/componenst/Footer/footer__br.css');
 @import url('../src/componenst/Footer/footer__text.css');
 
+@import url('../src/componenst/Movies/movies.css');
 @import url('../src/componenst/Movies/search/search.css');
 @import url('../src/componenst/Movies/search/search__block.css');
 @import url('../src/componenst/Movies/search/search__block_button.css');
