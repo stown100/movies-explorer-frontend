@@ -1,4 +1,4 @@
-import { Route, useHistory, Link } from "react-router-dom";
+import { Route, Link } from "react-router-dom";
 import logo from '../../images/greenlogo.svg'
 import Burger from '../Burger/Burger';
 
