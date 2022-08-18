@@ -81,7 +81,8 @@ class MainApi {
 }
 
 const mainApi = new MainApi({
-    url: 'https://myfilms.nomoredomains.rocks/api',
+    url: 'http://localhost:3000/api',
+    //https://myfilms.nomoredomains.rocks/api
 })
 
 export default mainApi;

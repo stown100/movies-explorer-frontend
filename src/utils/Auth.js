@@ -2,7 +2,8 @@ import { Route } from 'react-router-dom';
 import ErrorHandler from '../componenst/ErrorHandler/ErrorHandler';
 
 
-export const BASE_URL = 'https://myfilms.nomoredomains.rocks/api';
+export const BASE_URL = 'http://localhost:3000/api';
+//https://myfilms.nomoredomains.rocks/api
 
 const handleResponse = (res) => {
     if (res.ok) {

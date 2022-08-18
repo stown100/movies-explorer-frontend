@@ -15,12 +15,12 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
     const shortFilmsArray = [...moviesInfo.filter(el => el.duration <= 40)];
     const shortFilmsArrayAndSearch = shortFilmsArray.filter((movie) => movie.nameRU.toLowerCase().includes(search.toLowerCase()));
 
-    const arrLength = filtredMovise.length > 16
-        && shortFilmsArray.length !== visibleData.length
-        && shortFilmsArrayAndSearch.length !== visibleData.length
-        && visibleData.length !== moviesInfo.length;
+    // const arrLength = filtredMovise.length > 16
+    //     && shortFilmsArray.length !== visibleData.length
+    //     && shortFilmsArrayAndSearch.length !== visibleData.length
+    //     && visibleData.length !== moviesInfo.length;
 
-    const classNameButton = `${arrLength ? "even__button" : "even__button_hidden"}`
+    // const classNameButton = `${arrLength ? "even__button" : "even__button_hidden"}`
 
     // Открыть ещё 4 карточки
     const handlerAddMovies = () => {
@@ -75,8 +75,8 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
         }
     }
 
-    const render = visibleData.length !== 0
-        ? visibleData.map(({ country, created_at, description, director, duration, image, nameEN, nameRU, trailerLink, updated_at, year, id }) =>
+    const render = arr.length !== 0
+        ? arr.map(({ country, created_at, description, director, duration, image, nameEN, nameRU, trailerLink, updated_at, year, id }) =>
             <AllMoviesCard key={id} nameRU={nameRU} nameEN={nameEN} trailerLink={trailerLink} alt={nameRU} duration={duration}
                 image={`https://api.nomoreparties.co${image.url}`} country={country} created_at={created_at} description={description} director={director}
                 updated_at={updated_at} year={year} handleAddPlaceSubmit={handleAddPlaceSubmit}
@@ -120,7 +120,7 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
                 {render}
             </div>
             <div className="even">
-                <button onClick={handlerAddMovies} className={classNameButton}>Ещё</button>
+                <button onClick={handlerAddMovies} className="even__button">Ещё</button>
             </div>
             <Footer />
         </main>
