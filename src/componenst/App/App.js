@@ -254,7 +254,7 @@ function App() {
         console.log(err)
       })
   }
-  console.log(savedMovies)
+
   return (
     <CurrentUserContext.Provider value={currentUser}>
       <div className="App">

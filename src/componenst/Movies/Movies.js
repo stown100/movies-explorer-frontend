@@ -75,8 +75,8 @@ function Movies({ moviesInfo, handleAddPlaceSubmit, visibleData,
         }
     }
 
-    const render = arr.length !== 0
-        ? arr.map(({ country, created_at, description, director, duration, image, nameEN, nameRU, trailerLink, updated_at, year, id }) =>
+    const render = visibleData.length !== 0
+        ? visibleData.map(({ country, created_at, description, director, duration, image, nameEN, nameRU, trailerLink, updated_at, year, id }) =>
             <AllMoviesCard key={id} nameRU={nameRU} nameEN={nameEN} trailerLink={trailerLink} alt={nameRU} duration={duration}
                 image={`https://api.nomoreparties.co${image.url}`} country={country} created_at={created_at} description={description} director={director}
                 updated_at={updated_at} year={year} handleAddPlaceSubmit={handleAddPlaceSubmit}

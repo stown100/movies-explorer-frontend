@@ -2,7 +2,7 @@ import { Route } from 'react-router-dom';
 import ErrorHandler from '../componenst/ErrorHandler/ErrorHandler';
 
 
-export const BASE_URL = 'http://localhost:3000/api';
+export const BASE_URL = 'http://localhost:3001/api';
 //https://myfilms.nomoredomains.rocks/api
 
 const handleResponse = (res) => {
@@ -38,7 +38,7 @@ export const login = (email, password) => {
     return fetch(`${BASE_URL}/signin`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
         body: JSON.stringify({ email, password })
     })
