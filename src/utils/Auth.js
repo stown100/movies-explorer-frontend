@@ -3,7 +3,8 @@ import ErrorHandler from '../componenst/ErrorHandler/ErrorHandler';
 
 
 export const BASE_URL = 'http://localhost:3001/api';
-//https://myfilms.nomoredomains.rocks/api
+// https://myfilms.nomoredomains.rocks/api
+// http://localhost:3001/api
 
 const handleResponse = (res) => {
     if (res.ok) {
