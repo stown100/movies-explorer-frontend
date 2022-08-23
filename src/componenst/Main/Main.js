@@ -4,11 +4,12 @@ import HeaderMain from '../HeaderMain/HeaderMain';
 import Logo from '../../images/weblogo.svg';
 import Avatar from '../../images/avatar.jpg';
 import Pointer from '../../images/pointer.svg';
+import HeaderAuthorize from '../HeaderAuthorize/HeaderAuthorize';
 
-function Main() {
+function Main({ loggedIn }) {
     return (
         <main className="main">
-            <HeaderMain />
+            {loggedIn ? <HeaderAuthorize /> : <HeaderMain />}
             <div className="promo">
                 <img className="promo__logo" src={Logo} alt="web-logo"></img>
                 <h1 className="promo__title">

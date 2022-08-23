@@ -1,13 +1,15 @@
 import React from 'react';
-const MoviesCard = (data) => {
+const MoviesCard = ({ duration, image, nameRU, trailerLink, children }) => {
     return (
         <article className="movies-card__elem">
-            <img className="movies-card__elem_img" alt={data.alt} src={data.link} />
+            <a href={trailerLink} target='_blank' rel='noreferrer'>
+                <img className="movies-card__elem_img" alt={nameRU} src={image}></img>
+            </a>
             <div className="movies-card__elem_title">
-                <h6 className="movies-card__elem_title-text">{data.name}</h6>
-                {data.children}
+                <h6 className="movies-card__elem_title-text">{nameRU}</h6>
+                {children}
             </div>
-            <p className="movies-card__elem_time">{data.time}</p>
+            <p className="movies-card__elem_time">{duration}</p>
         </article>
     )
 }

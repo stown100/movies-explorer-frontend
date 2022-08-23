@@ -1,0 +1,19 @@
+.profile__form_unit {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid #424242;
+    padding-bottom: 16px;
+    align-items: center;
+  }
+
+  .profile__form_unit-last {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 16px;
+    align-items: center;
+    border-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 17px;
+  }

@@ -134,6 +134,118 @@ const MoviesCardList = [
         time: hour,
         _id: getRandom()
     },
+    {
+        name: title,
+        link: pic1,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic2,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+        {
+        name: title,
+        link: pic3,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic4,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic5,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+        {
+        name: title,
+        link: pic6,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic7,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic8,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic9,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic10,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic11,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic12,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic13,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic14,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic15,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
+    {
+        name: title,
+        link: pic16,
+        alt: title,
+        time: hour,
+        _id: getRandom()
+    },
 ];
 
 export default MoviesCardList;

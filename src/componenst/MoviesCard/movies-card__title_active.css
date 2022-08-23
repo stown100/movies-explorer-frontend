@@ -1,0 +1,9 @@
+.movies-card__title_active {
+    display: block;
+    color: #FFFFFF;
+    padding: 0;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 20px;
+    margin: 0 auto;
+}

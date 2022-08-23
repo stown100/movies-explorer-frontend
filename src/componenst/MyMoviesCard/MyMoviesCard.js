@@ -2,10 +2,13 @@ import React from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import removeCardIcon from '../../images/removeCardIcon.svg'
 
-const MyMoviesCard = (data) => {
+const MyMoviesCard = ({description, director, duration, image, movieId, owner, thumbnail, trailerLink, year, _id, removeCard }) => {
+    const handleDeleteMovie = () => removeCard(movieId)
     return (
-        <MoviesCard name={data.name} link={data.link} alt={data.alt} time={data.time} key={data._id} >
-            <button className="movie-card__elem_img-remove" onClick={data.onClick}><img src={removeCardIcon} alt="remove"></img></button>
+        <MoviesCard
+        _id={_id} nameRU={description} director={director} duration={duration} image={image} movieId={movieId} owner={owner}
+        thumbnail={thumbnail} trailerLink={trailerLink} year={year} >
+            <button className="movie-card__elem_img-remove" type="button" onClick={handleDeleteMovie}><img src={removeCardIcon} alt="remove"></img></button>
         </MoviesCard>
     )
 }
